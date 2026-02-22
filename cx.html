@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSN Broadcast Dashboard</title>
+<style>
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #121212; 
+    color: #f0f0f0; 
+    margin: 0; 
+    padding: 20px; 
+  }
+  header { 
+    text-align: center; 
+    margin-bottom: 20px; 
+    border-bottom: 3px solid #F56600; /* Clemson/RSN Orange */
+    padding-bottom: 10px; 
+  }
+  .container { 
+    display: flex; 
+    gap: 20px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+  }
+  .panel { 
+    background-color: #1e1e1e; 
+    padding: 20px; 
+    border-radius: 8px; 
+    flex: 1; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
+  }
+  h2 { color: #F56600; margin-top: 0; }
+  input[type="text"], textarea { 
+    width: 100%; 
+    padding: 12px; 
+    margin-bottom: 10px; 
+    border: 1px solid #333; 
+    border-radius: 4px; 
+    background-color: #2d2d2d; 
+    color: white; 
+    box-sizing: border-box; 
+  }
+  button { 
+    background-color: #F56600; 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    transition: 0.2s;
+  }
+  button:hover { background-color: #d45800; }
+  ul { list-style-type: none; padding: 0; }
+  li { 
+    background-color: #2d2d2d; 
+    margin-bottom: 8px; 
+    padding: 12px; 
+    border-radius: 4px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+  }
+  .delete-btn { 
+    background-color: #cc0000; 
+    padding: 5px 10px; 
+    font-size: 12px; 
+  }
+  .delete-btn:hover { background-color: #990000; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎙️ RSN Command Center</h1>
+</header>
+
+<div class="container">
+  <div class="panel">
+    <h2>Pre-Game Checklist</h2>
+    <input type="text" id="taskInput" placeholder="Add a task (e.g., Check OBS Hotkeys)...">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+
+  <div class="panel">
+    <h2>Live Game Tracker</h2>
+    <textarea id="gameNotes" rows="15" placeholder="Keep track of scores, impact players, and halftime stats here..."></textarea>
+    <br>
+    <button onclick="saveNotes()">Save Notes</button>
+    <span id="saveConfirm" style="color: #4CAF50; margin-left: 10px; display: none;">Saved successfully!</span>
+  </div>
+</div>
+
+<script>
+  // Simple Checklist Logic
+  function addTask() {
+    const input = document.getElementById('taskInput');
+    if (input.value.trim() === '') return;
+    
+    const ul = document.getElementById('taskList');
+    const li = document.createElement('li');
+    li.innerHTML = input.value + ' <button class="delete-btn" onclick="this.parentElement.remove()">Done</button>';
+    ul.appendChild(li);
+    input.value = '';
+  }
+
+  // Notes Logic (Saves data so it doesn't delete when you refresh)
+  window.onload = function() {
+    if(localStorage.getItem('rsnNotes')) {
+      document.getElementById('gameNotes').value = localStorage.getItem('rsnNotes');
+    }
+  };
+
+  function saveNotes() {
+    const notes = document.getElementById('gameNotes').value;
+    localStorage.setItem('rsnNotes', notes);
+    const confirmMsg = document.getElementById('saveConfirm');
+    confirmMsg.style.display = 'inline';
+    setTimeout(() => confirmMsg.style.display = 'none', 2000); // Hides the save message after 2 seconds
+  }
+</script>
+
+</body>
+</html>
